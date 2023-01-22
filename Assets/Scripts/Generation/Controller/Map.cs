@@ -19,32 +19,31 @@ public class Map : MonoBehaviour
     }
     #endregion
 
-    // Components
-    public RawImage debugImage;
+    [Header("Preview Settings")]
+    public RawImage previewImage;
+    public int previewWidth;
+    public int previewHeight;
+    public bool togglePreview = false;
 
-    [Header("Dimensions")]
-    public int width;
-    public int height;
-    public float scale;
+    [Header("Wall Settings")]
     public Vector2 offset;
-
-    [Header("Height Map")]
     public Wave[] heightWaves;
-    public bool toggleDebug = false;
-
-    [Header("Chunk Size")] 
+    public float scale;
     public int chunkSize;
 
-    // Variables
-    private float [,] heightMap;
-    private NoiseGenerator noise;
+    [Header("Ore settings")]
+    public OreSettings oreSettings;
 
+    // Variables
+    private float [,] previewMap;
+    private NoiseGenerator noise;
     private Dictionary<Vector2Int, Chunk> chunks = new Dictionary<Vector2Int, Chunk>();
 
     private void Start() {
         noise = new NoiseGenerator(scale, heightWaves, offset);
 
-        chunks.Add(Vector2Int.zero, Chunk.EmptyChunk(chunkSize, Vector2Int.zero));
+        ChunkBuilder cBuilder = new ChunkBuilder(noise, chunkSize);
+        chunks.Add(Vector2Int.zero, cBuilder.GetEmptyChunk(Vector2Int.zero));
     }
 
     #region Preview
@@ -53,35 +52,35 @@ public class Map : MonoBehaviour
             Debug.LogWarning("Chunk size is not a power of 8");
         }
 
-        if(toggleDebug){
-            if(!debugImage.gameObject.activeSelf) debugImage.gameObject.SetActive(true);
+        if(togglePreview){
+            if(!previewImage.gameObject.activeSelf) previewImage.gameObject.SetActive(true);
             GeneratePreview();
         }
         else{
-            if(debugImage.gameObject.activeSelf) debugImage.gameObject.SetActive(false);
+            if(previewImage.gameObject.activeSelf) previewImage.gameObject.SetActive(false);
         }
         GeneratePreview();
     }
     private void GeneratePreview(){
-        heightMap = NoiseGenerator.GetPointValues(width, height, scale, heightWaves, offset);
+        previewMap = NoiseGenerator.GetPointValues(previewWidth, previewHeight, scale, heightWaves, offset);
 
-        Color[] pixels = new Color[width * height];
+        Color[] pixels = new Color[previewWidth * previewHeight];
         int i = 0;
 
-        for(int x = 0; x < width; x++){
-            for (int y = 0; y < height; y++)
+        for(int x = 0; x < previewWidth; x++){
+            for (int y = 0; y < previewHeight; y++)
             {
-                pixels[i] = Color.Lerp(Color.black, Color.white, heightMap[x, y]);
+                pixels[i] = Color.Lerp(Color.black, Color.white, previewMap[x, y]);
                 i++;
             }
         }
 
-        Texture2D tex = new Texture2D(width, height);
+        Texture2D tex = new Texture2D(previewWidth, previewHeight);
         tex.SetPixels(pixels);
         tex.filterMode = FilterMode.Point;
         tex.Apply();
 
-        debugImage.texture = tex;
+        previewImage.texture = tex;
     }
     #endregion
     
@@ -108,11 +107,13 @@ public class Map : MonoBehaviour
     }
 
     public Chunk GetChunk(Vector2Int position){
+        ChunkBuilder chunkBuilder = new ChunkBuilder(noise, chunkSize);
+
         if(chunks.ContainsKey(position)){
             return chunks[position];
         }
         else{
-            Chunk newChunk = new Chunk(chunkSize, noise, position);
+            Chunk newChunk = chunkBuilder.GetChunk(position);
             chunks.Add(position, newChunk);
             return newChunk;
         }

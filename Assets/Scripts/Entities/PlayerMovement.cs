@@ -13,14 +13,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start() {
         rb = GetComponent<Rigidbody2D>();
-        movement = new Vector2(1f, 0f);
     }
 
     private void Update() {
-        // float x = Input.GetAxisRaw("Horizontal");
-        // float y = Input.GetAxisRaw("Vertical");
+        float x = Input.GetAxisRaw("Horizontal");
+        float y = Input.GetAxisRaw("Vertical");
 
-        // movement = new Vector2(x, y);
+        movement = new Vector2(x, y);
     }
     private void FixedUpdate() {
         if(movement != Vector2.zero){
