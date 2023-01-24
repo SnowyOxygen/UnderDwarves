@@ -10,7 +10,7 @@ public class ChunkBuilder
         _size = size;
     }
 
-    public Chunk GetChunk(Vector2Int position){
+    public Chunk GetChunk(Vector2Int position, float threshold){
         int[,] walls = new int[_size, _size];
 
         for(int x = 0; x < _size; x++){
@@ -21,7 +21,7 @@ public class ChunkBuilder
                     position.y * _size + y
                 );
 
-                walls[x, y] = (value >= 0) ? 1 : 0; 
+                walls[x, y] = (value >= threshold) ? 0 : 1; 
             }
         }
 

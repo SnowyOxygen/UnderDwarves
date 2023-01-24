@@ -30,9 +30,10 @@ public class Map : MonoBehaviour
     public Wave[] heightWaves;
     public float scale;
     public int chunkSize;
+    [Range(0, 1)] public float threshold = 0.5f;
 
     [Header("Ore settings")]
-    public OreSettings oreSettings;
+    public List<OreSettings> oreSettings = new List<OreSettings>();
 
     // Variables
     private float [,] previewMap;
@@ -70,7 +71,7 @@ public class Map : MonoBehaviour
         for(int x = 0; x < previewWidth; x++){
             for (int y = 0; y < previewHeight; y++)
             {
-                pixels[i] = Color.Lerp(Color.black, Color.white, previewMap[x, y]);
+                pixels[i] = previewMap[x, y] >= threshold ? Color.black : Color.white;
                 i++;
             }
         }
@@ -113,7 +114,7 @@ public class Map : MonoBehaviour
             return chunks[position];
         }
         else{
-            Chunk newChunk = chunkBuilder.GetChunk(position);
+            Chunk newChunk = chunkBuilder.GetChunk(position, threshold);
             chunks.Add(position, newChunk);
             return newChunk;
         }
