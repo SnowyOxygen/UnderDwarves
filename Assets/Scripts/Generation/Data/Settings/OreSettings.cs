@@ -6,16 +6,8 @@ public class OreSettings : ScriptableObject {
     public Sprite tileSprite;
     
     [Header("Generation Settings")]
-    /// <summary>
-    /// Maximum amount of tiles to be placed
-    /// </summary>
-    public Vector2Int veinSize;
-    /// <summary>
-    /// Maximum amount of veins that can appear in a chunk
-    /// </summary>
-    public int maxVeinAmount;
-    /// <summary>
-    /// Probability for each vein to spawn
-    /// </summary>
-    public float probability;
+    public Wave[] heightWaves;
+    
+    // Vein size & spacing
+    public float scale;
 }

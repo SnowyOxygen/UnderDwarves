@@ -7,10 +7,10 @@ public class NoiseGenerator{
     private Wave[] waves;
     private Vector2 offset;
 
-    public NoiseGenerator(float scale, Wave[] waves, Vector2 offset){
-        this.scale = scale;
-        this.waves = waves;
-        this.offset = offset;
+    public NoiseGenerator(WaveSettings settings){
+        this.scale = settings.scale;
+        this.waves = settings.heightWaves;
+        this.offset = settings.offset;
     }
     public float GetPointValue(int x, int y){
         return GetValue(x, y, this.scale, this.offset, this.waves);
