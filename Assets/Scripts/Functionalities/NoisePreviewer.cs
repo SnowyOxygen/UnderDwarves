@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// Component that generates a preview image of the noise settings
 public class NoisePreviewer : MonoBehaviour
 {
     [SerializeField] private RawImage image;
@@ -26,6 +27,7 @@ public class NoisePreviewer : MonoBehaviour
         GeneratePreview();
     }
 
+    // Generate image
     private void GeneratePreview()
     {
         map = NoiseGenerator.GetPointValues(width, height, settings.scale, settings.heightWaves, settings.offset);

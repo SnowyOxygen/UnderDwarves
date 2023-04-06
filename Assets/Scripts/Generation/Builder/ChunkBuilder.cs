@@ -10,6 +10,7 @@ public class ChunkBuilder
         _size = size;
     }
 
+    // Generate walls from noise
     public Chunk GetChunk(Vector2Int position, float threshold){
         int[,] walls = new int[_size, _size];
 
@@ -31,6 +32,7 @@ public class ChunkBuilder
         };
     }
 
+    // Get chunk without walls
     public Chunk GetEmptyChunk(Vector2Int position){
         return new Chunk(){
             walls = new int[_size, _size],

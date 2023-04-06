@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// Map generation class
 public class Map : MonoBehaviour
 {
     #region Singleton
@@ -35,6 +36,7 @@ public class Map : MonoBehaviour
     }
 
     private void OnValidate() {
+        // Check chunkSize validity
         if(chunkSize < 0 || (chunkSize & (chunkSize - 1)) != 0){
             Debug.LogWarning("Chunk size is not a power of 8");
         }

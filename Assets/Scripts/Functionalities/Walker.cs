@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+// Walker generator algorithm.
 public static class Walker
 {
     public static Vector2Int[] directions = new Vector2Int[4]{

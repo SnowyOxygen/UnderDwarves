@@ -10,7 +10,7 @@ public class MapPresenter : MonoBehaviour
     private Map map;
     [SerializeField] private Transform player;
     [SerializeField] private Tilemap tilemap;
-    [SerializeField] private RuleTile wallTile;
+    [SerializeField] private Tile wallTile;
 
     //Variables
     [SerializeField] private int viewDistance = 4;
@@ -20,14 +20,17 @@ public class MapPresenter : MonoBehaviour
     private Dictionary<Vector2Int, Chunk> visibleChunks = new Dictionary<Vector2Int, Chunk>();
 
     private void Start() {
+        // Get map singleton
         map = Map.instance;
 
         playerChunkPos = Vector2Int.zero;
         UpdateChunks();
     }
+
     private void Update() {
         if(CheckPlayerPosition()) UpdateChunks();
     }
+
     // Return true if player chunk position has changed
     private bool CheckPlayerPosition(){
         Vector2 playerPos = player.position;
@@ -40,6 +43,8 @@ public class MapPresenter : MonoBehaviour
         }
         else return false;
     }
+
+    // Check which chunks should be visible or hidden
     public void UpdateChunks(){
         Debug.Log($"Player Chunk is {playerChunkPos}");
 
@@ -66,6 +71,8 @@ public class MapPresenter : MonoBehaviour
         // Show chunks
         ViewChunks(chunks);
     }
+
+    // Show chunks inside of the viewer distance
     private void ViewChunks(Chunk[] chunks){
         foreach(Chunk chunk in chunks){
             // Debug.Log($"Chunk position is {chunk.position}");
@@ -74,9 +81,11 @@ public class MapPresenter : MonoBehaviour
             }
         }
     }
+
     private void ViewChunk(Chunk chunk){
         int[,] walls = chunk.walls;
 
+        // View chunks in a grid around the player
         for(int x = 0 ; x < map.chunkSize; x++){
             for(int y = 0; y < map.chunkSize; y++){
                 Vector3Int position = new Vector3Int(
@@ -93,6 +102,8 @@ public class MapPresenter : MonoBehaviour
 
         visibleChunks.Add(chunk.position, chunk);
     }
+
+    // Hide chunks outside of the viewer distance
     private void HideChunks(List<Chunk> safe){
         List<Vector2Int> toRemove = new List<Vector2Int>();
 
@@ -109,6 +120,7 @@ public class MapPresenter : MonoBehaviour
         Debug.Log($"{toRemove.Count} chunks removed");
         foreach(Vector2Int e in toRemove) visibleChunks.Remove(e);
     }
+
     private void HideChunk(Chunk chunk){
         int[,] walls = chunk.walls;
 
